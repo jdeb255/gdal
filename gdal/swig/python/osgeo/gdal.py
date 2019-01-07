@@ -278,7 +278,7 @@ def TranslateOptions(options=None, format=None,
               width = 0, height = 0, widthPct = 0.0, heightPct = 0.0,
               xRes = 0.0, yRes = 0.0,
               creationOptions=None, srcWin=None, projWin=None, projWinSRS=None, strict = False,
-              unscale = False, scaleParams=None, exponents=None,
+              unscale = False, scaleParams=None, exponents=None, aScale=None, aOffset=None,
               outputBounds=None, metadataOptions=None,
               outputSRS=None, GCPs=None,
               noData=None, rgbExpand=None,
@@ -305,6 +305,8 @@ def TranslateOptions(options=None, format=None,
           unscale --- unscale values with scale and offset metadata
           scaleParams --- list of scale parameters, each of the form [src_min,src_max] or [src_min,src_max,dst_min,dst_max]
           exponents --- list of exponentiation parameters
+          aScale --- set band scaling value (no modification of pixel values is done) 
+          aOffset --- set band offset value (no modification of pixel values is done) 
           outputBounds --- assigned output bounds: [ulx, uly, lrx, lry]
           metadataOptions --- list of metadata options
           outputSRS --- assigned output SRS
@@ -353,6 +355,16 @@ def TranslateOptions(options=None, format=None,
         if exponents:
             for exponent in exponents:
                 new_options += ['-exponent', _strHighPrec(exponent)]
+        if aScale:
+            if not isinstance(aScale, list):
+                aScale = [aScale]
+            for s in aScale:
+                new_options += ['-a_scale', s]
+        if aOffset:
+            if not isinstance(aOffset, list):
+                aOffset = [aOffset]
+            for o in aOffset:
+                new_options += ['-a_offset', o]
         if outputBounds is not None:
             new_options += ['-a_ullr', _strHighPrec(outputBounds[0]), _strHighPrec(outputBounds[1]), _strHighPrec(outputBounds[2]), _strHighPrec(outputBounds[3])]
         if metadataOptions is not None:
